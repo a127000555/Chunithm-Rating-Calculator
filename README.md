@@ -39,4 +39,4 @@ Input your password : <Your password Name>
 
 ## Ending
 
-Feel free to ask me to expand more features or update 譜面定数.
+Feel free to ask me for expanding more features or update 譜面定数.
