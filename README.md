@@ -9,7 +9,7 @@ A program to crawl all your score in chunithm-eng.net and calculate the your rat
 * Your python version should >= 3.6, with pandas installed.
 
 ```
-python try.py
+python crawl.py
 Input your account name. (Aime) : <Your Accout Name>
 Input your password : <Your password Name>
 ```
