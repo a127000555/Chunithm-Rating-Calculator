@@ -1,6 +1,6 @@
 
 
-# chunithm_crawler
+# Chunithm Rating Calculator
 
 ![](https://chunithm-net-eng.com/mobile/images/logo.png)
 
