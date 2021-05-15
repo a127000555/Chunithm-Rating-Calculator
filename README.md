@@ -37,6 +37,22 @@ Input your password : <Your password Name>
 
 > Example: My analysis.csv
 
+## Visualize
+
+* A html file will generated if using the script successfully: `visualize.html`.
+* This `html` has better looking to read and analysis your score & rating :).
+
+* Note that you can only open this html when chunithm server is on.
+
+<img src="https://i.imgur.com/t3XRcLG.png" width=300px>
+> Example: My visualize.html (1)
+
+<img src="https://i.imgur.com/dQMzI98.png" width=300px>
+> Example: My visualize.html (2)
+
+<img src="https://i.imgur.com/HrEUvwi.png" width=300px>
+> Example: My visualize.html (3)
+
 ## Ending
 
 Feel free to ask me for expanding more features or update 譜面定数.
