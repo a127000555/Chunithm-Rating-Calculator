@@ -39,7 +39,7 @@ if medium[0].upper() == 'A':
       print('Get userId successfully.')
       break
 elif medium[0].upper() == 'T':
-  print("How to get token?")
+  print("How to get token? Please refer to https://github.com/a127000555/chunithm_crawler")
   while True:
     token = input("Now, enter your token / cookies: ").strip()
     token_userId = re.findall(r"\d{14,}", token)
@@ -51,7 +51,7 @@ elif medium[0].upper() == 'T':
         'userId': token_userId[0],
         '_t': token_t[0]
       }
-      print(cookies)
+      # print(cookies)
       print("Maybe OK, try to analyze.")
       break
 else:
