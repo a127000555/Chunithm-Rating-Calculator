@@ -83,9 +83,9 @@ Maybe OK, try to analyze.
 * Note that you can only open this html when chunithm server is on.
 
 <div style="display:flex">
-    <img src="https://i.imgur.com/t3XRcLG.png" width=200px>
-    <img src="https://i.imgur.com/dQMzI98.png" width=200px>
-    <img src="https://i.imgur.com/HrEUvwi.png" width=200px>
+    <img src="https://i.imgur.com/t3XRcLG.png" width=250px>
+    <img src="https://i.imgur.com/dQMzI98.png" width=250px>
+    <img src="https://i.imgur.com/HrEUvwi.png" width=250px>
 </div>
 
 > Example: My visualize.html
