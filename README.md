@@ -90,6 +90,10 @@ Maybe OK, try to analyze.
 
 > Example: My visualize.html
 
+## TODO
+
+* RECENT 10 is fake.
+
 ## Ending
 
 Feel free to ask me for expanding more features or update 譜面定数.
