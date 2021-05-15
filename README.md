@@ -8,11 +8,13 @@ A program to crawl all your score in chunithm-eng.net and calculate the your rat
 
 ## Setup - Install prerequisites
 
+* This script is written by python3.6^, with pandas and requests install.
+
+* To install pandas and requests, you can just install with requirements.txt.
+
 ```
 pip install -r requirements.txt
 ```
-
-* Or, you need to install pandas & requests.
 
 ## Login
 
@@ -54,7 +56,10 @@ Maybe OK, try to analyze.
 
 ## Result
 
-* Program will generate two csv. `output.csv` and `analysis.csv`
+* Program will generate two csv. `output.csv`, `analysis.csv` and `visualize.html`
+  * `output.csv`: All records of your highest scores.
+  * `analysis.csv`: Calculate your rating in each score and sort with rating. 
+  * `visualize.html`: A beautiful html file to visualize `analysis.csv`.
 
 #### output.csv
 
