@@ -1,4 +1,4 @@
-from numpy.lib.type_check import imag
+from getpass import getpass
 import requests
 import re
 import html
@@ -8,32 +8,56 @@ import time
 import pickle
 import os
 import json
-from getpass import getpass
-account = input('Input your account name. (Aime): ')
-password = getpass('Input your password: ')
 
-print('Enter Login Page...')
-login_1 = 'https://lng-tgk-aime-gw.am-all.net/common_auth/login?site_id=chuniex&redirect_url=https://chunithm-net-eng.com/mobile/&back_url=https://chunithm.sega.com/'
-response = requests.get(login_1)
-cookies = response.headers['Set-Cookie']
+# Login Section
+medium = input("Use Aime account to analysis or chunithm website token? \nUse Aime type 'A', token type 'T': ")
+# catch blank line
+while len(medium) == 0:
+  medium = input()
+if medium[0].upper() == 'A':
+  while True:
+    account = input('Input your account name. (Aime): ')
+    password = getpass('Input your password: ')
+    print('Enter Login Page...')
+    login_1 = 'https://lng-tgk-aime-gw.am-all.net/common_auth/login?site_id=chuniex&redirect_url=https://chunithm-net-eng.com/mobile/&back_url=https://chunithm.sega.com/'
+    response = requests.get(login_1)
+    cookies = response.headers['Set-Cookie']
+    # Get JSESSIONID
+    print('Try to login...')
+    login_page = 'https://lng-tgk-aime-gw.am-all.net/common_auth/login/sid/'
+    response = requests.post(login_page, headers={'cookie': cookies}, data={
+                            'retention': 1, 'sid': account, 'password': password}, allow_redirects=False)
+    redirect_page = response.headers['location']
+    print('redirect to:', response.headers['location'])
+    cookies = response.cookies
 
-print('Try to login...')
-login_page = 'https://lng-tgk-aime-gw.am-all.net/common_auth/login/sid/'
-response = requests.post(login_page, headers={'cookie': cookies}, data={
-                         'retention': 1, 'sid': account, 'password': password}, allow_redirects=False)
-redirect_page = response.headers['location']
-print('redirect to:', response.headers['location'])
-cookies = response.cookies
-
-response = requests.get(redirect_page, cookies=cookies, allow_redirects=False)
-cookies = response.cookies
-if '_t' not in cookies:
-  print("Account or Password is invalid. Quit the program.")
+    response = requests.get(redirect_page, cookies=cookies, allow_redirects=False)
+    cookies = response.cookies
+    if '_t' not in cookies:
+      print("Account or Password is invalid. Please Try Again.")
+    else:
+      print('Get userId successfully.')
+      break
+elif medium[0].upper() == 'T':
+  print("How to get token?")
+  while True:
+    token = input("Now, enter your token / cookies: ").strip()
+    token_userId = re.findall(r"\d{14,}", token)
+    token_t = re.findall(r"[0-9a-f]{32}", token)
+    if len(token_userId) == 0 or len(token_t) == 0:
+      print("Your token seems wrong, please try again.")
+    else:
+      cookies = {
+        'userId': token_userId[0],
+        '_t': token_t[0]
+      }
+      print(cookies)
+      print("Maybe OK, try to analyze.")
+      break
+else:
+  print("Sorry, I don't understand what you want...")
   exit()
 
-print('Get userId successfully.')
-
-# Try to load idx2img data
 try:
   idx2img_url = pickle.load(open('idx2img.pkl', 'rb'))
 except Exception as e:
@@ -92,12 +116,15 @@ def job_request(lev):
     data = response.content
 
     result = parse(data.decode())
+    if len(result) == 0:
+      print("Your token is expired, please use new token or login with this script.")
+      exit()
     print('Get the scores of level', output_lev,
           f'successfully (num:{len(result)}).')
     extract_datas += [(output_lev, *row)
                       for row in result if int(row[-2]) != 0]
 
-
+# Try to load data
 for lev in range(21):
     job_request(lev)
 
@@ -113,7 +140,6 @@ outDf.to_csv('output.csv', index=False, encoding='utf-8-sig')
 
 print("Now, try to analyze your rating in each song.")
 time.sleep(1)
-
 
 def score_to_rating(score, hidden_lev):
     # rating transformer
@@ -304,19 +330,16 @@ for pattern in filtered_pattern:
     response_content = re.sub(pattern, "", response_content, flags=re.DOTALL)
 clean_template = response_content
 
-
-
 # Generate Rating Color in User information
 p = re.compile(r'<div class="player_rating">.*?</div>', flags=re.DOTALL)
 searchL, searchR = p.search(clean_template).span()
 findRatingRaw = clean_template[searchL:searchR]
-A = re.findall(r':.*?/', findRatingRaw)[0].strip()
-B = re.findall(r'</span>.*?\)', findRatingRaw)[0].strip()
-rating = A[1:-1]
+rating = re.findall(r':.*?/', findRatingRaw)[0].strip()[1:-1]
+max_rating = re.findall(r'</span>.*?\)', findRatingRaw)[0].strip()[8:-1]
 clean_template = clean_template[:searchL] + f'''
   <div class="player_rating">
     RATING : {generate_color(rating)} / 
-    (<span class="font_small">MAX</span> {generate_color(B[8:-1])})
+    (<span class="font_small">MAX</span> {generate_color(max_rating)})
   </div>
   ''' + clean_template[searchR+1:]
 
@@ -381,14 +404,9 @@ replaced = f'''
 p = re.compile(r'class="frame01_inside w450"' +
                r'.*?</div>'*13, flags=re.DOTALL)
 
-
-
 inner_start, inner_end = p.search(clean_template).span()
 output = clean_template[:inner_end] + replaced + clean_template[inner_end:]
-# print(clean_template[inner_start:inner_end])
-# print(output)
 
-# clean_template = re.sub(r'<div class="sleep', clean_template, replaced, flags=re.DOTALL)
 with open("visualize.html", 'wb') as fout:
     fout.write(output.encode())
 
